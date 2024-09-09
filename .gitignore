@@ -41,3 +41,6 @@ figures*/
 *.sh
 blender/
 .restore/
+
+venv/
+tmp/

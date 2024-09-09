@@ -16,7 +16,6 @@ import numpy as np
 import torch
 import torch.nn as nn
 import nvdiffrast.torch as dr
-from einops import rearrange, repeat
 
 from .encoder.dino_wrapper import DinoWrapper
 from .decoder.transformer import TriplaneTransformer
@@ -92,7 +91,7 @@ class InstantMesh(nn.Module):
 
         # encode images
         image_feats = self.encoder(images, cameras)
-        image_feats = rearrange(image_feats, '(b v) l d -> b (v l) d', b=B)
+        image_feats = image_feats.view(B, -1, image_feats.shape[-1])
         
         # decode triplanes
         planes = self.transformer(image_feats)

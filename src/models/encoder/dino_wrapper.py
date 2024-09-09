@@ -15,7 +15,6 @@
 
 import torch.nn as nn
 from transformers import ViTImageProcessor
-from einops import rearrange, repeat
 from .dino import ViTModel
 
 
@@ -39,7 +38,7 @@ class DinoWrapper(nn.Module):
         # camera: [B, N, D]
         # RGB image with [0,1] scale and properly sized
         if image.ndim == 5:
-            image = rearrange(image, 'b n c h w -> (b n) c h w')
+            image = image.view(-1, *image.shape[2:])
         dtype = image.dtype
         inputs = self.processor(
             images=image.float(), 
@@ -50,7 +49,7 @@ class DinoWrapper(nn.Module):
         # embed camera
         N = camera.shape[1]
         camera_embeddings = self.camera_embedder(camera)
-        camera_embeddings = rearrange(camera_embeddings, 'b n d -> (b n) d')
+        camera_embeddings = camera_embeddings.view(-1, camera_embeddings.shape[-1])
         embeddings = camera_embeddings
         # This resampling of positional embedding uses bicubic interpolation
         outputs = self.model(**inputs, adaln_input=embeddings, interpolate_pos_encoding=True)
