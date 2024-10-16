@@ -44,3 +44,4 @@ blender/
 
 venv/
 tmp/
+.ipynb_checkpoints/

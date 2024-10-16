@@ -11,4 +11,7 @@ transformers
 diffusers
 accelerate
 xatlas
+opencv-python
+pillow
+rembg
 git+https://github.com/NVlabs/nvdiffrast/
